@@ -1,106 +1,79 @@
-import React, { useState } from 'react';
-import HamRadioInfo from './components/HamRadioInfo.jsx';
-import SkywarnInfo from './components/SkywarnInfo.jsx';
-import WeatherDisplay from './components/WeatherDisplay.jsx';
-import WeatherHistory from './components/WeatherHistory.jsx';
-import WeatherForecast from './components/WeatherForecast.jsx';
-import { FaGithub } from 'react-icons/fa';
+// App.jsx (Main entry point for your tactical dashboard)
 
-function App() {
-  const [activeTab, setActiveTab] = useState('current');
+import React, { useEffect, useState } from 'react';
+import './App.css';
+
+// Component stubs (you'll build these out later)
+const AllStarStatus = () => <div className="p-2">AllStar Node Status</div>;
+const NWSAlerts = () => <div className="p-2 border-2 border-yellow-400">NWS Alerts Placeholder</div>;
+const YouTubeEmbed = ({ url }) => (
+  <div className="aspect-video w-full">
+    <iframe
+      className="w-full h-full"
+      src={url}
+      title="YouTube Live Feed"
+      allowFullScreen
+    />
+  </div>
+);
+const HFPropagation = () => (
+  <div className="p-2">
+    <center>
+      <a href="https://www.hamqsl.com/solar.html">
+        <img src="https://www.hamqsl.com/solar101sc.php" alt="HF Propagation" />
+      </a>
+    </center>
+  </div>
+);
+const NewsFeed = () => <div className="p-2">RSS News Feed Placeholder</div>;
+const Radar = () => <div className="p-2">Radar Placeholder</div>;
+const Forecast = () => <div className="p-2">3-Day Forecast Placeholder</div>;
+const SkywarnTools = () => <div className="p-2">Skywarn Field Tools Placeholder</div>;
+
+function HeaderClock() {
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const formatDate = (date) => date.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
+
+  const utc = new Date(now.toUTCString());
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Header */}
-      <header className="bg-gray-800 shadow-lg">
-        <div className="container mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold text-center md:text-left">
-            Ham Radio Weather Station
-          </h1>
-        </div>
-      </header>
+    <div className="grid grid-cols-3 gap-4 bg-gray-800 text-white p-4 text-center">
+      <div className="text-xl font-bold">KJ5IRQ</div>
+      <div>
+        <div>{formatDate(now)}</div>
+      </div>
+      <div>
+        <div>Local: {formatTime(now)}</div>
+        <div>UTC: {formatTime(utc)}</div>
+      </div>
+    </div>
+  );
+}
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-6">
-        {/* Ham Radio Info Section - Always visible */}
-        <HamRadioInfo />
-        
-        {/* Skywarn Info Section - Always visible */}
-        <SkywarnInfo />
-        
-        {/* Weather Tabs */}
-        <div className="mt-6">
-          <div className="flex border-b border-gray-700">
-            <button
-              className={`px-4 py-2 font-medium ${
-                activeTab === 'current'
-                  ? 'text-blue-400 border-b-2 border-blue-400'
-                  : 'text-gray-400 hover:text-gray-300'
-              }`}
-              onClick={() => setActiveTab('current')}
-            >
-              Current
-            </button>
-            <button
-              className={`px-4 py-2 font-medium ${
-                activeTab === 'forecast'
-                  ? 'text-blue-400 border-b-2 border-blue-400'
-                  : 'text-gray-400 hover:text-gray-300'
-              }`}
-              onClick={() => setActiveTab('forecast')}
-            >
-              Forecast
-            </button>
-            <button
-              className={`px-4 py-2 font-medium ${
-                activeTab === 'history'
-                  ? 'text-blue-400 border-b-2 border-blue-400'
-                  : 'text-gray-400 hover:text-gray-300'
-              }`}
-              onClick={() => setActiveTab('history')}
-            >
-              History
-            </button>
-          </div>
-          
-          {/* Tab Content */}
-          <div className="mt-4">
-            {activeTab === 'current' && <WeatherDisplay />}
-            {activeTab === 'forecast' && <WeatherForecast />}
-            {activeTab === 'history' && <WeatherHistory />}
-          </div>
-        </div>
-      </main>
-      
-      {/* Footer */}
-      <footer className="bg-gray-800 py-6 mt-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-4 md:mb-0">
-              <p className="text-gray-400">
-                Weather data provided by Wunderground API
-              </p>
-              <p className="text-gray-400">
-                Station ID: KTXMINER45
-              </p>
-            </div>
-            <div className="flex items-center">
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white flex items-center"
-              >
-                <FaGithub className="mr-2" size={20} />
-                View on GitHub
-              </a>
-            </div>
-          </div>
-          <div className="mt-4 text-center text-gray-500 text-sm">
-            <p>© {new Date().getFullYear()} KJ5IRQ Ham Radio Weather Station</p>
-          </div>
-        </div>
-      </footer>
+function App() {
+  const [youtubeUrl] = useState("https://www.youtube.com/embed/live_stream?channel=UC_example");
+
+  return (
+    <div className="min-h-screen bg-black text-white font-sans">
+      <HeaderClock />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+        <AllStarStatus />
+        <NWSAlerts />
+        <YouTubeEmbed url={youtubeUrl} />
+        <HFPropagation />
+        <div className="p-2">Solar Snapshot Placeholder</div>
+        <NewsFeed />
+        <Radar />
+        <Forecast />
+        <SkywarnTools />
+      </div>
     </div>
   );
 }
